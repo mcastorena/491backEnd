@@ -83,9 +83,10 @@ module.exports = function(app) {
 
   // POST to create a new message from the authenticated camera
   apiRoutes.post('/status', requireAuth, function(req, res) {
-    const status = new Status();
-        status.id = req.user.id;
-        status.status = req.body.status;
+    const camerastatus = new CameraStatus();
+        camerastatus.id = req.body.id;
+	camerastatus.parkinglot_ID = req.body.parkinglot_ID;
+        camerastatus.status = req.body.status;
         
         // Save the status message if there are no errors
         status.save(function(err) {
