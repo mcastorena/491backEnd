@@ -2,8 +2,12 @@ const mongoose = require('mongoose');
 
 // Schema defines how status messages will be stored in MongoDB
 
-const StatusSchema = new mongoose.Schema({
+const CameraStatusSchema = new mongoose.Schema({
   id: {
+    type: String,
+    required: true
+  },
+  parkinglot_ID: {
     type: String,
     required: true
   },
@@ -16,4 +20,4 @@ const StatusSchema = new mongoose.Schema({
   timestamps: true		// Saves createdAt and updatedAt
 });
 
-module.exports = mongoose.model('Status', StatusSchema);
+module.exports = mongoose.model('CameraStatus', CameraStatusSchema);
