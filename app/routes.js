@@ -1,6 +1,6 @@
 // Import dependencies
 const passport = require('passport');
-const express = require('express');
+var express = require('express');
 const config = require('../config/main');
 const jwt = require('jsonwebtoken');
 
