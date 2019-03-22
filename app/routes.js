@@ -25,8 +25,8 @@ module.exports = function(app) {
 
   // Change bodyparser limit
 var bodyParser = require('body-parser');
-app.use(bodyParser.json({limit: "50mb"}));
-app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
+express.use(bodyParser.json({limit: "50mb"}));
+express.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
 
 
   // Bring in defined Passport Strategy
