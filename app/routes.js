@@ -24,8 +24,8 @@ module.exports = function(app) {
   app.use(passport.initialize());
 
   // Change bodyparser limit
-  app.use(bodyParser.json({ limit: '10mb', extended: true }))
-  app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }))
+  //app.use(bodyParser.json({ limit: '10mb', extended: true }))
+  //app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }))
 
 
   // Bring in defined Passport Strategy
