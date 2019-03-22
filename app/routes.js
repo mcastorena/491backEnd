@@ -1,6 +1,6 @@
 // Import dependencies
 const passport = require('passport');
-var express = require('express');
+const express = require('express');
 const config = require('../config/main');
 const jwt = require('jsonwebtoken');
 
@@ -25,9 +25,17 @@ module.exports = function(app) {
 
   // Change bodyparser limit
 var bodyParser = require('body-parser');
-express.use(bodyParser.json({limit: "50mb"}));
-express.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
 
+ app.use(bodyParser.urlencoded({
+  extended: true,
+  limit: '50mb',
+  parameterLimit: 100000
+  }))
+
+ app.use(bodyParser.json({
+  limit: '50mb',
+  parameterLimit: 100000
+ }))
 
   // Bring in defined Passport Strategy
   require('../config/passport')(passport);
