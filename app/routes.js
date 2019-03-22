@@ -133,8 +133,8 @@ var bodyParser = require('body-parser');
 
       // Save the status message if there are no errors
       overlayimage.save(function (err) {
-          if (err)
-              res.status(400).send(err);
+          if (err){
+             return res.status(400).send(err);}
 
           res.status(201).json({ message: 'Overlay Image saved!' });
       });
