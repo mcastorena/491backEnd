@@ -105,25 +105,33 @@ var bodyParser = require('body-parser');
       });
   });
 
-  // GET messages for authenticated camera
+  // GET status for authenticated camera
   apiRoutes.get('/camerastatus', function(req, res) {
-    CameraStatus.find({$or : [{'id': req.body.id}, {'id': req.body.id}]}, function(err, messages) {
+    CameraStatus.find({$or : [{'id': req.query.id}, {'id': req.query.id}]}, function(err, messages) {
       if (err)
         res.status(400).send(err);
 
-      res.status(400).json(messages);
+      res.status(202).json(messages);
     });
     });
 
   // GET messages for a parking lot
   apiRoutes.get('/status', function (req, res) {
-      ParkingLotStatus.find({ $or: [{ 'parkinglot_ID': req.body.parkinglot_ID }, { 'parkinglot_ID': req.body.parkinglot_ID }] }, function (err, messages) {
+      ParkingLotStatus.find({ $or: [{ 'parkinglot_ID': req.query.parkinglot_ID }, { 'parkinglot_ID': req.query.parkinglot_ID }] }, function (err, messages) {
           if (err)
               res.status(400).send(err);
 
-          res.status(400).json(messages);
+          res.status(202).json(messages);
       });
   });
+  //apiRoutes.get('/status', function (req, res) {
+  //    ParkingLotStatus.find({ $or: [{ 'parkinglot_ID': req.body.parkinglot_ID }, { 'parkinglot_ID': req.body.parkinglot_ID }] }, function (err, messages) {
+  //        if (err)
+  //            res.status(400).send(err);
+
+  //        res.status(202).json(messages);
+  //    });
+  //});
 
   // POST to create a new overlay image entry
   apiRoutes.post('/overlayimage', function (req, res) {
@@ -140,13 +148,13 @@ var bodyParser = require('body-parser');
       });
   });
 
-// GET to return an overlay image
+  // GET to return an overlay image
   apiRoutes.get('/overlayimage', function (req, res) {
       OverlayImage.find({ $or: [{ 'parkinglot_ID': req.query.parkinglot_ID }, { 'parkinglot_ID': req.query.parkinglot_ID }] }, function (err, messages) {
           if (err)
               res.status(400).send(err);
 
-          res.status(400).json(messages);
+          res.status(202).json(messages);
       });
   });
   //apiRoutes.get('/overlayimage', function (req, res) {
@@ -175,13 +183,21 @@ var bodyParser = require('body-parser');
 
   // GET to return overlay coordinates
   apiRoutes.get('/overlaycoordinates', function (req, res) {
-      OverlayCoordinates.find({ $or: [{ 'parkinglot_ID': req.body.parkinglot_ID }, { 'parkinglot_ID': req.body.parkinglot_ID }] }, function (err, messages) {
+      OverlayCoordinates.find({ $or: [{ 'parkinglot_ID': req.query.parkinglot_ID }, { 'parkinglot_ID': req.query.parkinglot_ID }] }, function (err, messages) {
           if (err)
               res.status(400).send(err);
 
-          res.status(400).json(messages);
+          res.status(202).json(messages);
       });
   });
+  //apiRoutes.get('/overlaycoordinates', function (req, res) {
+  //    OverlayCoordinates.find({ $or: [{ 'parkinglot_ID': req.body.parkinglot_ID }, { 'parkinglot_ID': req.body.parkinglot_ID }] }, function (err, messages) {
+  //        if (err)
+  //            res.status(400).send(err);
+
+  //        res.status(202).json(messages);
+  //    });
+  //});
 
 
   // Set url for API group routes
