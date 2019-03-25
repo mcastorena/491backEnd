@@ -140,15 +140,23 @@ var bodyParser = require('body-parser');
       });
   });
 
-  // GET to return an overlay image
+// GET to return an overlay image
   apiRoutes.get('/overlayimage', function (req, res) {
-      OverlayImage.find({ $or: [{ 'parkinglot_ID': req.body.parkinglot_ID }, { 'parkinglot_ID': req.body.parkinglot_ID }] }, function (err, messages) {
+      OverlayImage.find({ $or: [{ 'parkinglot_ID': req.query.parkinglot_ID }, { 'parkinglot_ID': req.query.parkinglot_ID }] }, function (err, messages) {
           if (err)
               res.status(400).send(err);
 
           res.status(400).json(messages);
       });
   });
+  //apiRoutes.get('/overlayimage', function (req, res) {
+  //    OverlayImage.find({ $or: [{ 'parkinglot_ID': req.body.parkinglot_ID }, { 'parkinglot_ID': req.body.parkinglot_ID }] }, function (err, messages) {
+  //        if (err)
+  //            res.status(400).send(err);
+
+  //        res.status(400).json(messages);
+  //    });
+  //});
 
   // POST to create a new overlay coordinates entry
   apiRoutes.post('/overlaycoordinates', function (req, res) {
