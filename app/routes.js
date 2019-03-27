@@ -114,6 +114,21 @@ var bodyParser = require('body-parser');
       res.status(202).json(messages);
     });
     });
+	
+  // POST parking lot "master file" *for testing purposes*
+  apiRoutes.post('/status', requireAuth, function (req, res) {
+      const lotstatus = new ParkingLotStatus();
+      lotstatus.parkinglot_ID = req.body.parkinglot_ID;
+      lotstatus.status = req.body.status;
+
+      // Save the status message if there are no errors
+      lotstatus.save(function (err) {
+          if (err)
+              res.status(400).send(err);
+
+          res.status(201).json({ message: 'Status message sent!' });
+      });
+  });
 
   // GET messages for a parking lot
   apiRoutes.get('/status', function (req, res) {
