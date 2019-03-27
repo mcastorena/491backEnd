@@ -116,7 +116,7 @@ var bodyParser = require('body-parser');
     });
 	
   // POST parking lot "master file" *for testing purposes*
-  apiRoutes.post('/status', requireAuth, function (req, res) {
+  apiRoutes.post('/status', function (req, res) {
       const lotstatus = new ParkingLotStatus();
       lotstatus.parkinglot_ID = req.body.parkinglot_ID;
       lotstatus.status = req.body.status;
