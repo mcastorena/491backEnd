@@ -162,17 +162,27 @@ var bodyParser = require('body-parser');
           res.status(201).json({ message: 'Overlay Image saved!' });
       });
   });
-
-  // GET to return an overlay image
-  apiRoutes.get('/overlayimage', function (req, res) {
-      OverlayImage.find({ $or: [{ 'parkinglot_ID': req.query.parkinglot_ID }, { 'parkinglot_ID': req.query.parkinglot_ID }] }, function (err, messages) {
-          if (err)
-              res.status(400).send(err);
-
-          res.status(202).json(messages);
-      });
+  apiRoutes.get('/status/:id',function(req,res,next){
+    ParkingLotStatus.findOne(
+      {parkinglot_ID: req.params.id},
+      // the callback function
+      (err, parkinglotstatus) => {
+      // Handle any possible database errors
+          if (err) return res.status(500).send(err);
+          return res.send(parkinglotstatus);
+      }
+      );
   });
-  //apiRoutes.get('/overlayimage', function (req, res) {
+  // GET to return an overlay image
+  // apiRoutes.get('/overlayimage', function (req, res) {
+  //     OverlayImage.find({ $or: [{ 'parkinglot_ID': req.query.parkinglot_ID }, { 'parkinglot_ID': req.query.parkinglot_ID }] }, function (err, messages) {
+  //         if (err)
+  //             res.status(400).send(err);
+
+  //         res.status(202).json(messages);
+  //     });
+  // });
+  // //apiRoutes.get('/overlayimage', function (req, res) {
   //    OverlayImage.find({ $or: [{ 'parkinglot_ID': req.body.parkinglot_ID }, { 'parkinglot_ID': req.body.parkinglot_ID }] }, function (err, messages) {
   //        if (err)
   //            res.status(400).send(err);
