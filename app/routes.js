@@ -117,7 +117,7 @@ module.exports = function(app) {
     });
     });
   //LOOK HERE FOR CHANGES
-  apiRoutes.put(['/status/','/camerastatus/'], function(req,res,next){
+  apiRoutes.put(['/status/:id','/camerastatus/:id'], function(req,res,next){
     //console.log(req.params.id);
     const camerastatus = new CameraStatus();
     const parkinglotstatus = new ParkingLotStatus();
@@ -129,32 +129,32 @@ module.exports = function(app) {
         return res.send(parkinglotstatus);
     }
     );
-    CameraStatus.findOneAndUpdate(req.params.id,req.body,{new: true},
-      // the callback function
-      (err, todo) => {
-      // Handle any possible database errors
-          if (err) return res.status(500).send(err);
-          return res.send(todo);
-      }
-      );
+    // CameraStatus.findOneAndUpdate(req.params.id,req.body,{new: true},
+    //   // the callback function
+    //   (err, camerastatus) => {
+    //   // Handle any possible database errors
+    //       if (camerastatus) return res.status(500).send(err);
+    //       return res.send(camerastatus);
+    //   }
+    //   );
   });
-  apiRoutes.put('/status', updateMaster);
+  //apiRoutes.put('/status', updateMaster);
   apiRoutes.post('/camerastatus', function (req, res, next) {
-    var myField = req.body.myField;
+    //var myField = req.body.myField;
     const camerastatus = new CameraStatus();
     CameraStatus.create(req.body).then(function(camerastatus){
       res.send(camerastatus);
     }).catch(next);
-    req.Info = myField;
-    return next();
-  }, updateMaster);  
+    //req.Info = myField;
+  //  return next();
+  });  
   
-  function updateMaster(req,res,next){
-    ParkingLotStatus.findOneAndUpdate({_id:req.Info.params.id},req.body).then(function(){
-      ParkingLotStatus.findOne({_id:req.params.id}).then(function(status){
-        res.send(status);
-      });
-    });
+  // function updateMaster(req,res,next){
+  //   ParkingLotStatus.findOneAndUpdate({_id:req.Info.params.id},req.body).then(function(){
+  //     ParkingLotStatus.findOne({_id:req.params.id}).then(function(status){
+  //       res.send(status);
+  //     });
+  //   });
     // const _id = req.params.id;
     // CameraStatus.findOneAndUpdate({_id},
     //   req.body,
@@ -190,7 +190,7 @@ module.exports = function(app) {
     //       res.jsonp(id);
     //   }
     // });
-  }
+  //}
   //PUT masterfile(tomas)
   // apiRoutes.put('/status/:id',function(req,res,next){
   //   ParkingLotStatus.findByIdAndUpdate({_id:req.params.id},req.body).then(function(){
@@ -201,11 +201,11 @@ module.exports = function(app) {
   //   });
   // });
   // POST parking lot "master file" *for testing purposes*
-  // apiRoutes.post('/status', function (req, res, next) {
-  //     const lotstatus = new ParkingLotStatus();
-  //     ParkingLotStatus.create(req.body).then(function(status){
-  //       res.send(status);
-  //     }).catch(next);
+  apiRoutes.post('/status', function (req, res, next) {
+      const lotstatus = new ParkingLotStatus();
+      ParkingLotStatus.create(req.body).then(function(status){
+        res.send(status);
+      }).catch(next);
   //     // lotstatus.parkinglot_ID = req.body.parkinglot_ID;
   //     // lotstatus.status = req.body.status;
 
@@ -216,16 +216,29 @@ module.exports = function(app) {
 
   //     //     res.status(201).json({ message: 'Status message sent!' });
   //     // });
-  // });
+  });
   // //delete masterfile(tomas)
   apiRoutes.delete('/status/:id',function(req,res,next){
     ParkingLotStatus.findByIdAndDelete({_id:req.params.id}).then(function(status){
       res.send(status);
     });
   });
+  //get (tomas)
+  apiRoutes.get('/status/:id',function(req,res,next){
+    ParkingLotStatus.findOne(
+      {parkinglot_ID: req.params.id},
+      // the callback function
+      (err, parkinglotstatus) => {
+      // Handle any possible database errors
+          if (err) return res.status(500).send(err);
+          return res.send(parkinglotstatus);
+      }
+      );
+  });
   // GET messages for a parking lot
   apiRoutes.get('/status', function (req, res) {
-      ParkingLotStatus.find({ $or: [{ 'parkinglot_ID': req.query.parkinglot_ID }, { 'parkinglot_ID': req.query.parkinglot_ID }] }, function (err, messages) {
+      ParkingLotStatus.find({ $or: [{ 'parkinglot_ID': req.query.parkinglot_ID }, { 'parkinglot_ID': req.query.parkinglot_ID }] }, 
+      function (err, messages) {
           if (err)
               res.status(400).send(err);
 
