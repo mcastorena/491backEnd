@@ -119,8 +119,8 @@ module.exports = function(app) {
   //LOOK HERE FOR CHANGES
   apiRoutes.put(['/status/:id','/camerastatus/:id'], function(req,res,next){
     //console.log(req.params.id);
-    const camerastatus = new CameraStatus();
-    const parkinglotstatus = new ParkingLotStatus();
+    //const camerastatus = new CameraStatus();
+    //const parkinglotstatus = new ParkingLotStatus();
     ParkingLotStatus.findOneAndUpdate(req.params.id,req.body,{new: true},
     // the callback function
     (err, parkinglotstatus) => {
@@ -129,14 +129,14 @@ module.exports = function(app) {
         return res.send(parkinglotstatus);
     }
     );
-    // CameraStatus.findOneAndUpdate(req.params.id,req.body,{new: true},
-    //   // the callback function
-    //   (err, camerastatus) => {
-    //   // Handle any possible database errors
-    //       if (camerastatus) return res.status(500).send(err);
-    //       return res.send(camerastatus);
-    //   }
-    //   );
+    CameraStatus.findOneAndUpdate(req.params.id,req.body,{new: true},
+      // the callback function
+      (err, camerastatus) => {
+      // Handle any possible database errors
+          if (err) return res.status(500).send(err);
+          //return res.send(camerastatus);
+      }
+      );
   });
   //apiRoutes.put('/status', updateMaster);
   apiRoutes.post('/camerastatus', function (req, res, next) {
