@@ -27,6 +27,21 @@ mongoose.connect(config.database);
 
 require('./app/routes')(app);
 
+//error handling(tomas)
+app.use(function(err, req,res, next){
+  //console.log(err);
+  res.status(422).send({error:err.message});
+});
 // Start the server
 app.listen(port);
 console.log('Your server is running on port ' + port + '.');
+
+if(process.env.NODE_ENV !== 'production') {
+  process.once('uncaughtException', function(err) {
+    console.error('FATAL: Uncaught exception.');
+    console.error(err.stack||err);
+    setTimeout(function(){
+      process.exit(1);
+    }, 100);
+  });
+}
