@@ -122,7 +122,7 @@ module.exports = function(app) {
     //const camerastatus = new CameraStatus();
     //const parkinglotstatus = new ParkingLotStatus();
     CameraStatus.findOne({parkinglot_ID:req.params.id},function(err, parkinglot){
-      console.log(req.body);
+      console.log(req.body.status);
       console.log(parkinglot);
       CameraStatus.findOneAndUpdate(req.params.id,req.body,{new: true},
         // the callback function
@@ -131,18 +131,48 @@ module.exports = function(app) {
             if (err) return res.status(500).send(err);
         }
         );
-      //if(camera.confidence == req.confidence){
-        ParkingLotStatus.findOneAndUpdate(req.params.id,req.body,{new: true},
-          // the callback function
-          (err, parkinglotstatus) => {
-          // Handle any possible database errors
-              if (err) return res.status(500).send(err);
-              return res.send(parkinglotstatus);
-          }
-        );
-      //}    
+        var camParkingSpots = JSON.parse(req.body.status);                                      // Get all parking spots as JSON object from camera's request
+        var masterParkingSpots = JSON.parse(parkinglot.status);                                        // Get all parking spots as JSON object from masterfile object
+        for (var i = 0; i < camParkingSpots.length; i++) {                                      // For all camera parking spots compare against 
+            var camParkingSpace = camParkingSpots[i];
+            for (var j = 0; j < masterParkingSpots.length; j++) {
+                var masterParkingSpace = masterParkingSpots[j];
+                if (camParkingSpace.id == masterParkingSpace.id) {
+                    if (camParkingSpace.confidence == 0) {                                      // If camParkingSpace confidence status == 0, update
+                        masterParkingSpots[j].confidence = camParkingSpace.confidence;
+                        break;
+                    } else if (camParkingSpace.confidence > masterParkingSpace.confidence) {    // If camParkingSpace confidence > masterParkingSpace confidence, update
+                        masterParkingSpots[j].confidence = camParkingSpace.confidence;
+                        break;
+                    } else {                                                                    // If camParkingSpace confidence < masterParkingSpace confidence, do not update
+                        break;
+                    }
+                }
+            }
+        }
+
+      parkinglot.status = JSON.stringify(masterParkingSpots);                                        // Turn array back to string and update lot.status then save
+      parkinglot.save();
+      // for(var i =0; i <masterParkingSpace.length; i++){
+      //   ParkingLotStatus.findOneAndUpdate(masterParkingSpace[i].id,masterParkingSpace[i].confidence,{new: true},
+      //     // the callback function
+      //     (err, parkinglotstatus) => {
+      //     // Handle any possible database errors
+      //         if (err) return res.status(500).send(err);
+      //         return res.send(parkinglotstatus);
+      //     }
+      //   );
+      // }
     });
   });
+  // ParkingLotStatus.findOneAndUpdate(req.params.id,req.body,{new: true},
+  //   // the callback function
+  //   (err, parkinglotstatus) => {
+  //   // Handle any possible database errors
+  //       if (err) return res.status(500).send(err);
+  //       return res.send(parkinglotstatus);
+  //   }
+  // );
   //post a new camera 
   apiRoutes.post('/camerastatus', function (req, res, next) {
     //var myField = req.body.myField;
