@@ -253,14 +253,14 @@ module.exports = function(app) {
           res.status(202).json(messages);
       });
   });
-  //apiRoutes.get('/overlaycoordinates', function (req, res) {
-  //    OverlayCoordinates.find({ $or: [{ 'parkinglot_ID': req.body.parkinglot_ID }, { 'parkinglot_ID': req.body.parkinglot_ID }] }, function (err, messages) {
-  //        if (err)
-  //            res.status(400).send(err);
+  apiRoutes.get('/overlaycoordinates', function (req, res) {
+     OverlayCoordinates.find({ $or: [{ 'parkinglot_ID': req.body.parkinglot_ID }, { 'parkinglot_ID': req.body.parkinglot_ID }] }, function (err, messages) {
+         if (err)
+             res.status(400).send(err);
 
-  //        res.status(202).json(messages);
-  //    });
-  //});
+         res.status(202).json(messages);
+     });
+  });
 
 
   // Set url for API group routes
