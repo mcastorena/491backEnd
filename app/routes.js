@@ -121,101 +121,43 @@ module.exports = function(app) {
     //console.log(req.params.id);
     //const camerastatus = new CameraStatus();
     //const parkinglotstatus = new ParkingLotStatus();
-    ParkingLotStatus.findOneAndUpdate(req.params.id,req.body,{new: true},
-    // the callback function
-    (err, parkinglotstatus) => {
-    // Handle any possible database errors
-        if (err) return res.status(500).send(err);
-        return res.send(parkinglotstatus);
-    }
-    );
-    CameraStatus.findOneAndUpdate(req.params.id,req.body,{new: true},
-      // the callback function
-      (err, camerastatus) => {
-      // Handle any possible database errors
-          if (err) return res.status(500).send(err);
-          //return res.send(camerastatus);
-      }
-      );
+    //ParkingLotStatus.findOne({camera_ID:req.params.id},function(err, camera){
+      // console.log(req.body);
+      // console.log(camera);
+      //if(camera.confidence == req.confidence){
+        ParkingLotStatus.findOneAndUpdate(req.params.id,req.body,{new: true},
+          // the callback function
+          (err, parkinglotstatus) => {
+          // Handle any possible database errors
+              if (err) return res.status(500).send(err);
+              return res.send(parkinglotstatus);
+          }
+        );
+      //}    
+      CameraStatus.findOneAndUpdate(req.params.id,req.body,{new: true},
+        // the callback function
+        (err, camerastatus) => {
+        // Handle any possible database errors
+            if (err) return res.status(500).send(err);
+        }
+        );
+    //});
   });
-  //apiRoutes.put('/status', updateMaster);
+  //post a new camera 
   apiRoutes.post('/camerastatus', function (req, res, next) {
     //var myField = req.body.myField;
     const camerastatus = new CameraStatus();
     CameraStatus.create(req.body).then(function(camerastatus){
       res.send(camerastatus);
     }).catch(next);
-    //req.Info = myField;
-  //  return next();
   });  
   
-  // function updateMaster(req,res,next){
-  //   ParkingLotStatus.findOneAndUpdate({_id:req.Info.params.id},req.body).then(function(){
-  //     ParkingLotStatus.findOne({_id:req.params.id}).then(function(status){
-  //       res.send(status);
-  //     });
-  //   });
-    // const _id = req.params.id;
-    // CameraStatus.findOneAndUpdate({_id},
-    //   req.body,
-    //     {new: true},
-    //     (err, camerastatus) =>{
-    //     if (err){
-    //       res.status(400).json(err);
-    //     }
-    //     res.json(camerastatus);
-    //   });
-    // var item = {
-    //   parkinglot_ID: req.body.id,
-    //   status: req.body.status
-    // };
-    // var id = req.body.id;
-    // mongo.connect(url,function(err, db){
-    //   assert.equal(null, err);
-    //   db.collection('parkinglotstatuses').updateOne({"parkinglot_ID":objectID(id)},{$set:item},function(err, result){
-    //     assert.equal(null,err);
-    //     console.log('Item updated');
-    //     db.close();
-    //   });
-    // });
-    //return res.send();
-    // id = id.extend(id, req.body);
-    // id.save(function(err) {
-    //   if (err) {
-    //       return res.send('/status', {
-    //           errors: err.errors,
-    //           id: id
-    //       });
-    //   } else {
-    //       res.jsonp(id);
-    //   }
-    // });
-  //}
-  //PUT masterfile(tomas)
-  // apiRoutes.put('/status/:id',function(req,res,next){
-  //   ParkingLotStatus.findByIdAndUpdate({_id:req.params.id},req.body).then(function(){
-  //     ParkingLotStatus.findOne({_id:req.params.id}).then(function(status){
-  //       res.send(status);
-  //     });
-    
-  //   });
-  // });
   // POST parking lot "master file" *for testing purposes*
   apiRoutes.post('/status', function (req, res, next) {
       const lotstatus = new ParkingLotStatus();
       ParkingLotStatus.create(req.body).then(function(status){
         res.send(status);
       }).catch(next);
-  //     // lotstatus.parkinglot_ID = req.body.parkinglot_ID;
-  //     // lotstatus.status = req.body.status;
-
-  //     // // Save the status message if there are no errors
-  //     // lotstatus.save(function (err) {
-  //     //     if (err)
-  //     //         res.status(400).send(err);
-
-  //     //     res.status(201).json({ message: 'Status message sent!' });
-  //     // });
   });
   // //delete masterfile(tomas)
   apiRoutes.delete('/status/:id',function(req,res,next){
