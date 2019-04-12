@@ -3,11 +3,15 @@ const mongoose = require('mongoose');
 // Schema defines how status messages will be stored in MongoDB
 
 const CameraStatusSchema = new mongoose.Schema({
+  parkinglot_ID: {
+    type: String,
+    required: true
+  },
   camera_ID: {
     type: String,
     required: true
   },
-  confidence: {
+  status: {
     type: String,
     required: true
   }

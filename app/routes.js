@@ -121,9 +121,16 @@ module.exports = function(app) {
     //console.log(req.params.id);
     //const camerastatus = new CameraStatus();
     //const parkinglotstatus = new ParkingLotStatus();
-    //ParkingLotStatus.findOne({camera_ID:req.params.id},function(err, camera){
-      // console.log(req.body);
-      // console.log(camera);
+    CameraStatus.findOne({parkinglot_ID:req.params.id},function(err, parkinglot){
+      console.log(req.body);
+      console.log(parkinglot);
+      CameraStatus.findOneAndUpdate(req.params.id,req.body,{new: true},
+        // the callback function
+        (err, camerastatus) => {
+        // Handle any possible database errors
+            if (err) return res.status(500).send(err);
+        }
+        );
       //if(camera.confidence == req.confidence){
         ParkingLotStatus.findOneAndUpdate(req.params.id,req.body,{new: true},
           // the callback function
@@ -134,14 +141,7 @@ module.exports = function(app) {
           }
         );
       //}    
-      CameraStatus.findOneAndUpdate(req.params.id,req.body,{new: true},
-        // the callback function
-        (err, camerastatus) => {
-        // Handle any possible database errors
-            if (err) return res.status(500).send(err);
-        }
-        );
-    //});
+    });
   });
   //post a new camera 
   apiRoutes.post('/camerastatus', function (req, res, next) {
@@ -220,14 +220,14 @@ module.exports = function(app) {
           res.status(202).json(messages);
       });
   });
-  //apiRoutes.get('/overlayimage', function (req, res) {
-  //    OverlayImage.find({ $or: [{ 'parkinglot_ID': req.body.parkinglot_ID }, { 'parkinglot_ID': req.body.parkinglot_ID }] }, function (err, messages) {
-  //        if (err)
-  //            res.status(400).send(err);
+  apiRoutes.get('/overlayimage', function (req, res) {
+     OverlayImage.find({ $or: [{ 'parkinglot_ID': req.body.parkinglot_ID }, { 'parkinglot_ID': req.body.parkinglot_ID }] }, function (err, messages) {
+         if (err)
+             res.status(400).send(err);
 
-  //        res.status(400).json(messages);
-  //    });
-  //});
+         res.status(400).json(messages);
+     });
+  });
 
   // POST to create a new overlay coordinates entry
   apiRoutes.post('/overlaycoordinates', function (req, res) {

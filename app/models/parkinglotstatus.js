@@ -8,7 +8,7 @@ const ParkingLotStatusSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  confidence: {
+  status: {
     type: String,
     required: true
   }
