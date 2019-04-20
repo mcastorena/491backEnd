@@ -149,12 +149,13 @@ module.exports = function(app) {
       var tempArray;
       // console.log(parkinglot.status.length);
       // console.log(parkinglot.status[1]);
-      for(var j = 0; j < parkinglot.status.length; j++){
-        //tempArray[j] = parkinglot.status[j];
-        console.log(parkinglot.status[j]);
-      }
+      // for(var j = 0; j < parkinglot.status.length; j++){
+      //   //tempArray[j] = parkinglot.status[j];
+      //   console.log(parkinglot.status[j]);
+      // }
+      //console.log(masterFile.status);
       //console.log(tempArray.status[1]);
-      ParkingLotStatus.findOneAndUpdate(req.params.id,masterFile,{new: true},
+      ParkingLotStatus.findOneAndUpdate(req.params.id, masterFile,{new: true},
         //the callback function
         (err, parkinglot) => {
           // Handle any possible database errors

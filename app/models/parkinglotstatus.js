@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 // Schema defines how status messages will be stored in MongoDB
 // Schema defines how status messages will be stored in MongoDB
 const arraySchema = new mongoose.Schema({
+  "_id": false,
+
   id:{
     type:String,
     required: true
