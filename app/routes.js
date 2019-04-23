@@ -153,7 +153,7 @@ module.exports = function(app) {
       //   //tempArray[j] = parkinglot.status[j];
       //   console.log(parkinglot.status[j]);
       // }
-      console.log(masterFile.status[0]);
+      //console.log(masterFile.status);
       //console.log(tempArray.status[1]);
       ParkingLotStatus.findOneAndUpdate(req.params.id, masterFile,{new: true},
         //the callback function
