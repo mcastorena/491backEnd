@@ -153,9 +153,9 @@ module.exports = function(app) {
       //   //tempArray[j] = parkinglot.status[j];
       //   console.log(parkinglot.status[j]);
       // }
-      //console.log(masterFile.status);
+      //console.log(req.body.parkinglot_ID);
       //console.log(tempArray.status[1]);
-      ParkingLotStatus.findOneAndUpdate(req.params.id, masterFile,{new: true},
+      ParkingLotStatus.findOneAndUpdate(req.body.parkinglot_ID, masterFile,{new: true},
         //the callback function
         (err, parkinglot) => {
           // Handle any possible database errors
