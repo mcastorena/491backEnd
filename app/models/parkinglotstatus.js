@@ -16,7 +16,6 @@ const arraySchema = new mongoose.Schema({
 
 });
 const ParkingLotStatusSchema = new mongoose.Schema({
-  "_id": false,
   parkinglot_ID: {
     type: String,
     required: true
