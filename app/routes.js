@@ -153,13 +153,13 @@ module.exports = function(app) {
       //   //tempArray[j] = parkinglot.status[j];
       //   console.log(parkinglot.status[j]);
       // }
-      //console.log(masterFile.status);
+      console.log(masterFile.status[0]);
       //console.log(tempArray.status[1]);
       ParkingLotStatus.findOneAndUpdate(req.params.id, masterFile,{new: true},
         //the callback function
         (err, parkinglot) => {
           // Handle any possible database errors
-          if (err) return res.status(424).send(err);
+          if (err) return res.status(500).send(err);
           return res.send(parkinglot);
         }
       );
