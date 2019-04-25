@@ -134,25 +134,23 @@ module.exports = function(app) {
       //console.log(req.body.status.length);
       var masterFile = parkinglot;
       for(var i = 0; i < req.body.status.length; i++){
-          if(req.body.status[i].id == masterFile.status[i].id){
+        //nested 4 loop
+        for(var k = 0; k <masterFile.status.length; k++){
+          if(req.body.status[i].id == masterFile.status[k].id){
             //console.log(masterFile.status[i].id);
             if(req.body.status[i].confidence ==0 ){
-              masterFile.status[i].confidence =0;
+              masterFile.status[k].confidence =0;
               //break;
             }
-            else if(req.body.status[i].confidence > masterFile.status[i].confidence ){
-              masterFile.status[i].confidence = req.body.status[i].confidence;
+            else if(req.body.status[i].confidence > masterFile.status[k].confidence ){
+              masterFile.status[k].confidence = req.body.status[i].confidence;
               //break;
             }
           }
+        }
       }
       var tempArray;
-      // console.log(parkinglot.status.length);
-      // console.log(parkinglot.status[1]);
-      // for(var j = 0; j < parkinglot.status.length; j++){
-      //   //tempArray[j] = parkinglot.status[j];
-      //   console.log(parkinglot.status[j]);
-      // }
+
       console.log(req.body.parkinglot_ID);
       //console.log(tempArray.status[1]);
       ParkingLotStatus.findOneAndUpdate({"parkinglot_ID":req.body.parkinglot_ID}, {$set: {"status": masterFile.status}},{new: true},
@@ -163,52 +161,7 @@ module.exports = function(app) {
           return res.send(parkinglot);
         }
       );
-      // for(var i = 0; i < req.body.status.length; i++){
-      //   console.log(masterFile.status[i]);
-      // }
-      // var camParkingSpots = JSON.parse(JSON.stringify(req.body.status));                                      // Get all parking spots as JSON object from camera's request
-      // var masterParkingSpots = JSON.parse(JSON.stringify(parkinglot.status));                                        // Get all parking spots as JSON object from masterfile object
-      //console.log(masterParkingSpots[0].confidence);
-      // for (var i = 0; i < camParkingSpots.length; i++) {                                      // For all camera parking spots compare against 
-      //     var camParkingSpace = camParkingSpots[i];
-      //     for (var j = 0; j < masterParkingSpots.length; j++) {
-      //         var masterParkingSpace = masterParkingSpots[j];
-      //         console.log(masterParkingSpace[i]);
-      //         if (camParkingSpace.id == masterParkingSpace.id) {
-      //             if (camParkingSpace.confidence == 0) {                                      // If camParkingSpace confidence status == 0, update
-      //                 masterParkingSpots[j].confidence = camParkingSpace.confidence;
-      //                 break;
-      //             } else if (camParkingSpace.confidence > masterParkingSpace.confidence) {    // If camParkingSpace confidence > masterParkingSpace confidence, update
-      //                 masterParkingSpots[j].confidence = camParkingSpace.confidence;
-      //                 //console.log(masterParkingSpace[j].confidence);
-      //                 break;
-      //             } else {                                                                    // If camParkingSpace confidence < masterParkingSpace confidence, do not update
-      //                 break;
-      //             }
-      //         }
-      //     }
-      // }
-      // for(var i =0; i <masterParkingSpots.length; i++){
-      //   ParkingLotStatus.findOneAndUpdate(masterParkingSpots[i].id,masterParkingSpots[i].confidence,{new: true},
-      //     // the callback function
-      //     (err, parkinglotstatus) => {
-      //     // Handle any possible database errors
-      //         if (err) return res.status(500).send(err);
-      //         //return res.send(parkinglotstatus);
-      //     }
-      //   );
-      // }
-      //console.log(parkinglot.parkinglot_ID);
-      //ParkingLotStatus.findOneAndUpdate(parkinglot.parkinglot_ID,parkinglot.confidence,{new: true},
-        // the callback function
-        // (err, parkinglotstatus) => {
-        // // Handle any possible database errors
-        //     if (err) return res.status(500).send(err);
-        // }
-      //);
-      //  parkinglot.status = JSON.stringify(masterParkingSpots);                                        // Turn array back to string and update lot.status then save
-      //  parkinglot.save();
-      //return res.send(parkinglot);
+
     });
   });
   //post a new camera 
@@ -246,21 +199,17 @@ module.exports = function(app) {
       );
   });
   // GET messages for a parking lot
-  apiRoutes.get('/status', function (req, res) {
-      ParkingLotStatus.find({ $or: [{ 'parkinglot_ID': req.query.parkinglot_ID }, { 'parkinglot_ID': req.query.parkinglot_ID }] }, 
-      function (err, messages) {
-          if (err)
-              res.status(400).send(err);
+  // apiRoutes.get('/status', function (req, res) {
+  //     ParkingLotStatus.find({ $or: [{ 'parkinglot_ID': req.query.parkinglot_ID }, { 'parkinglot_ID': req.query.parkinglot_ID }] }, 
+  //     function (err, messages) {
+  //         if (err)
+  //             res.status(400).send(err);
 
-          res.status(202).json(messages);
-      });
-  });
+  //         res.status(202).json(messages);
+  //     });
+  // });
   apiRoutes.get('/camerastatus/:id',function(req,res,next){
-    // var temp = req;
-    // console.log(temp.body.status[1].confidence);
-    // if(temp.body.status[1].confidence< camerastatus.i)
     CameraStatus.findOne(
-
       {parkinglot_ID: req.params.id},
       // the callback function
       (err, camerastatus) => {
@@ -270,14 +219,22 @@ module.exports = function(app) {
       }
       );
   });
-  //apiRoutes.get('/status', function (req, res) {
-  //    ParkingLotStatus.find({ $or: [{ 'parkinglot_ID': req.body.parkinglot_ID }, { 'parkinglot_ID': req.body.parkinglot_ID }] }, function (err, messages) {
-  //        if (err)
-  //            res.status(400).send(err);
+  apiRoutes.get('/status', function (req, res) {
+    ParkingLotStatus.find({}).then(function(lots){
+      res.send(lots);
+    });
+  });
 
-  //        res.status(202).json(messages);
+  // apiRoutes.get('/status', function (req, res) {
+  //    ParkingLotStatus.find({}, function (err, lots) {
+  //     if (err) return res.status(400).send(err);
+  //     var parkingLots = {};
+  //     lots.forEach(function(lot){
+  //       parkingLots[lots._id]=lot;
+  //     });
+  //     return res.send(parkingLots);
   //    });
-  //});
+  // });
 
   // POST to create a new overlay image entry
   apiRoutes.post('/overlayimage', function (req, res) {
@@ -295,14 +252,14 @@ module.exports = function(app) {
   });
 
   // GET to return an overlay image
-  apiRoutes.get('/overlayimage', function (req, res) {
-      OverlayImage.find({ $or: [{ 'parkinglot_ID': req.query.parkinglot_ID }, { 'parkinglot_ID': req.query.parkinglot_ID }] }, function (err, messages) {
-          if (err)
-              res.status(400).send(err);
+  // apiRoutes.get('/overlayimage', function (req, res) {
+  //     OverlayImage.find({ $or: [{ 'parkinglot_ID': req.query.parkinglot_ID }, { 'parkinglot_ID': req.query.parkinglot_ID }] }, function (err, messages) {
+  //         if (err)
+  //             res.status(400).send(err);
 
-          res.status(202).json(messages);
-      });
-  });
+  //         res.status(202).json(messages);
+  //     });
+  // });
   apiRoutes.get('/overlayimage', function (req, res) {
      OverlayImage.find({ $or: [{ 'parkinglot_ID': req.body.parkinglot_ID }, { 'parkinglot_ID': req.body.parkinglot_ID }] }, function (err, messages) {
          if (err)
@@ -336,14 +293,14 @@ module.exports = function(app) {
           res.status(202).json(messages);
       });
   });
-  apiRoutes.get('/overlaycoordinates', function (req, res) {
-     OverlayCoordinates.find({ $or: [{ 'parkinglot_ID': req.body.parkinglot_ID }, { 'parkinglot_ID': req.body.parkinglot_ID }] }, function (err, messages) {
-         if (err)
-             res.status(400).send(err);
+  // apiRoutes.get('/overlaycoordinates', function (req, res) {
+  //    OverlayCoordinates.find({ $or: [{ 'parkinglot_ID': req.body.parkinglot_ID }, { 'parkinglot_ID': req.body.parkinglot_ID }] }, function (err, messages) {
+  //        if (err)
+  //            res.status(400).send(err);
 
-         res.status(202).json(messages);
-     });
-  });
+  //        res.status(202).json(messages);
+  //    });
+  // });
 
 
   // Set url for API group routes
