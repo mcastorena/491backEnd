@@ -46,50 +46,50 @@ module.exports = function(app) {
   const apiRoutes = express.Router();
 
   // Register new cameras
-  apiRoutes.post('/register', function(req, res) {
-    console.log(req.body);
-    if(!req.body.id || !req.body.password) {
-      res.status(400).json({ success: false, message: 'Please enter id and password.' });
-    } else {
-      const newCamera = new Camera({
-        id: req.body.id,
-        password: req.body.password
-      });
+  // apiRoutes.post('/register', function(req, res) {
+  //   console.log(req.body);
+  //   if(!req.body.id || !req.body.password) {
+  //     res.status(400).json({ success: false, message: 'Please enter id and password.' });
+  //   } else {
+  //     const newCamera = new Camera({
+  //       id: req.body.id,
+  //       password: req.body.password
+  //     });
 
-      // Attempt to save the camera
-      newCamera.save(function(err) {
-        if (err) {
-          return res.status(400).json({ success: false, message: 'That id already exists.'});
-        }
-        res.status(201).json({ success: true, message: 'Successfully created new camera.' });
-      });
-    }
-  });
+  //     // Attempt to save the camera
+  //     newCamera.save(function(err) {
+  //       if (err) {
+  //         return res.status(400).json({ success: false, message: 'That id already exists.'});
+  //       }
+  //       res.status(201).json({ success: true, message: 'Successfully created new camera.' });
+  //     });
+  //   }
+  // });
 
-  // Authenticate the camera and get a JSON Web Token to include in the header of future requests.
-  apiRoutes.post('/authenticate', function(req, res) {
-    Camera.findOne({
-      id: req.body.id
-    }, function(err, camera) {
-      if (err) throw err;
+  // // Authenticate the camera and get a JSON Web Token to include in the header of future requests.
+  // apiRoutes.post('/authenticate', function(req, res) {
+  //   Camera.findOne({
+  //     id: req.body.id
+  //   }, function(err, camera) {
+  //     if (err) throw err;
 
-      if (!camera) {
-        res.status(401).json({ success: false, message: 'Authentication failed. Camera not found.' });
-      } else {
-        // Check if password matches
-        camera.comparePassword(req.body.password, function(err, isMatch) {
-          if (isMatch && !err) {
-            // Create token if the password matched and no error was thrown
-	    // Token does not expire
-            const token = jwt.sign({id: camera.id}, config.secret);
-            res.status(200).json({ success: true, token: 'JWT ' + token });
-          } else {
-            res.status(401).json({ success: false, message: 'Authentication failed. Passwords did not match.' });
-          }
-        });
-      }
-    });
-  });
+  //     if (!camera) {
+  //       res.status(401).json({ success: false, message: 'Authentication failed. Camera not found.' });
+  //     } else {
+  //       // Check if password matches
+  //       camera.comparePassword(req.body.password, function(err, isMatch) {
+  //         if (isMatch && !err) {
+  //           // Create token if the password matched and no error was thrown
+	//     // Token does not expire
+  //           const token = jwt.sign({id: camera.id}, config.secret);
+  //           res.status(200).json({ success: true, token: 'JWT ' + token });
+  //         } else {
+  //           res.status(401).json({ success: false, message: 'Authentication failed. Passwords did not match.' });
+  //         }
+  //       });
+  //     }
+  //   });
+  // });
 
   // POST to create a new message from the authenticated camera
   // apiRoutes.post('/camerastatus', requireAuth, function (req, res) {
@@ -115,7 +115,7 @@ module.exports = function(app) {
 
       res.status(202).json(messages);
     });
-    });
+  });
   //LOOK HERE FOR CHANGES
   apiRoutes.put(['/status/:id','/camerastatus/:id'], function(req,res,next){
     //console.log(req.params.id);
@@ -184,7 +184,7 @@ module.exports = function(app) {
   apiRoutes.delete('/status/:id',function(req,res,next){
     ParkingLotStatus.findByIdAndDelete({_id:req.params.id}).then(function(status){
       res.send(status);
-    });
+    }).catch(next);
   });
   //get (tomas)
   apiRoutes.get('/status/:id',function(req,res,next){
@@ -222,7 +222,7 @@ module.exports = function(app) {
   apiRoutes.get('/status', function (req, res) {
     ParkingLotStatus.find({}).then(function(lots){
       res.send(lots);
-    });
+    }).catch(next);
   });
 
   // apiRoutes.get('/status', function (req, res) {
