@@ -127,9 +127,11 @@ module.exports = function(app) {
       );
   });
   apiRoutes.get('/status', function (req, res) {
-    ParkingLotStatus.find({}).then(function(lots){
-      res.send(lots);
-    }).catch(next);
+    ParkingLotStatus.find({},
+      (err, lots)=>{
+        if (err) return res.status(500).send(err);
+        return res.send(lots);
+    });
   });
 
 
