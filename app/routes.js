@@ -10,7 +10,6 @@ const assert = require('assert');
 const requireAuth = passport.authenticate('jwt', { session: false });
 
 // Load models
-const Camera = require('./models/camera');
 const CameraStatus = require('./models/camerastatus');
 
 const ParkingLotStatus = require('./models/parkinglotstatus');
