@@ -25,87 +25,12 @@ module.exports = function(app) {
   // Initialize passport for use
   app.use(passport.initialize());
 
-  // Change bodyparser limit
-//const bodyParser = require('body-parser');
-
-//  app.use(bodyParser.urlencoded({
-//   extended: true,
-//   limit: '50mb',
-//   parameterLimit: 100000
-//   }))
-
-//  app.use(bodyParser.json({
-//   limit: '50mb',
-//   parameterLimit: 100000
-//  }))
 
   // Bring in defined Passport Strategy
   require('../config/passport')(passport);
 
   // Create API group routes
   const apiRoutes = express.Router();
-
-  // Register new cameras
-  // apiRoutes.post('/register', function(req, res) {
-  //   console.log(req.body);
-  //   if(!req.body.id || !req.body.password) {
-  //     res.status(400).json({ success: false, message: 'Please enter id and password.' });
-  //   } else {
-  //     const newCamera = new Camera({
-  //       id: req.body.id,
-  //       password: req.body.password
-  //     });
-
-  //     // Attempt to save the camera
-  //     newCamera.save(function(err) {
-  //       if (err) {
-  //         return res.status(400).json({ success: false, message: 'That id already exists.'});
-  //       }
-  //       res.status(201).json({ success: true, message: 'Successfully created new camera.' });
-  //     });
-  //   }
-  // });
-
-  // // Authenticate the camera and get a JSON Web Token to include in the header of future requests.
-  // apiRoutes.post('/authenticate', function(req, res) {
-  //   Camera.findOne({
-  //     id: req.body.id
-  //   }, function(err, camera) {
-  //     if (err) throw err;
-
-  //     if (!camera) {
-  //       res.status(401).json({ success: false, message: 'Authentication failed. Camera not found.' });
-  //     } else {
-  //       // Check if password matches
-  //       camera.comparePassword(req.body.password, function(err, isMatch) {
-  //         if (isMatch && !err) {
-  //           // Create token if the password matched and no error was thrown
-	//     // Token does not expire
-  //           const token = jwt.sign({id: camera.id}, config.secret);
-  //           res.status(200).json({ success: true, token: 'JWT ' + token });
-  //         } else {
-  //           res.status(401).json({ success: false, message: 'Authentication failed. Passwords did not match.' });
-  //         }
-  //       });
-  //     }
-  //   });
-  // });
-
-  // POST to create a new message from the authenticated camera
-  // apiRoutes.post('/camerastatus', requireAuth, function (req, res) {
-  //     const camerastatus = new CameraStatus();
-  //     camerastatus.id = req.body.id;
-  //     camerastatus.parkinglot_ID = req.body.parkinglot_ID;
-  //     camerastatus.status = req.body.status;
-
-  //     // Save the status message if there are no errors
-  //     camerastatus.save(function (err) {
-  //         if (err)
-  //             res.status(400).send(err);
-
-  //         res.status(201).json({ message: 'Status message sent!' });
-  //     });
-  // });
 
   // GET status for authenticated camera
   apiRoutes.get('/camerastatus', function(req, res) {
@@ -198,16 +123,7 @@ module.exports = function(app) {
       }
       );
   });
-  // GET messages for a parking lot
-  // apiRoutes.get('/status', function (req, res) {
-  //     ParkingLotStatus.find({ $or: [{ 'parkinglot_ID': req.query.parkinglot_ID }, { 'parkinglot_ID': req.query.parkinglot_ID }] }, 
-  //     function (err, messages) {
-  //         if (err)
-  //             res.status(400).send(err);
 
-  //         res.status(202).json(messages);
-  //     });
-  // });
   apiRoutes.get('/camerastatus/:id',function(req,res,next){
     CameraStatus.findOne(
       {parkinglot_ID: req.params.id},
@@ -225,16 +141,6 @@ module.exports = function(app) {
     }).catch(next);
   });
 
-  // apiRoutes.get('/status', function (req, res) {
-  //    ParkingLotStatus.find({}, function (err, lots) {
-  //     if (err) return res.status(400).send(err);
-  //     var parkingLots = {};
-  //     lots.forEach(function(lot){
-  //       parkingLots[lots._id]=lot;
-  //     });
-  //     return res.send(parkingLots);
-  //    });
-  // });
 
   // POST to create a new overlay image entry
   apiRoutes.post('/overlayimage', function (req, res) {
@@ -252,22 +158,15 @@ module.exports = function(app) {
   });
 
   // GET to return an overlay image
-  // apiRoutes.get('/overlayimage', function (req, res) {
-  //     OverlayImage.find({ $or: [{ 'parkinglot_ID': req.query.parkinglot_ID }, { 'parkinglot_ID': req.query.parkinglot_ID }] }, function (err, messages) {
-  //         if (err)
-  //             res.status(400).send(err);
-
-  //         res.status(202).json(messages);
-  //     });
-  // });
   apiRoutes.get('/overlayimage', function (req, res) {
-     OverlayImage.find({ $or: [{ 'parkinglot_ID': req.body.parkinglot_ID }, { 'parkinglot_ID': req.body.parkinglot_ID }] }, function (err, messages) {
-         if (err)
-             res.status(400).send(err);
+      OverlayImage.find({ $or: [{ 'parkinglot_ID': req.query.parkinglot_ID }, { 'parkinglot_ID': req.query.parkinglot_ID }] }, function (err, messages) {
+          if (err)
+              res.status(400).send(err);
 
-         res.status(400).json(messages);
-     });
+          res.status(202).json(messages);
+      });
   });
+
 
   // POST to create a new overlay coordinates entry
   apiRoutes.post('/overlaycoordinates', function (req, res) {
@@ -293,14 +192,6 @@ module.exports = function(app) {
           res.status(202).json(messages);
       });
   });
-  // apiRoutes.get('/overlaycoordinates', function (req, res) {
-  //    OverlayCoordinates.find({ $or: [{ 'parkinglot_ID': req.body.parkinglot_ID }, { 'parkinglot_ID': req.body.parkinglot_ID }] }, function (err, messages) {
-  //        if (err)
-  //            res.status(400).send(err);
-
-  //        res.status(202).json(messages);
-  //    });
-  // });
 
 
   // Set url for API group routes
