@@ -1,5 +1,4 @@
 // Import dependencies
-const passport = require('passport');
 const express = require('express');
 const config = require('../config/main');
 const jwt = require('jsonwebtoken');
@@ -7,7 +6,6 @@ const mongo = require('mongodb').MongoClient;
 const objectID = require('mongodb').ObjectID;
 const assert = require('assert');
 // Set up middleware
-const requireAuth = passport.authenticate('jwt', { session: false });
 
 // Load models
 const CameraStatus = require('./models/camerastatus');
@@ -21,12 +19,6 @@ const url = 'localhost:3000/api/';
 module.exports = function(app) {
   // API Route Section
 
-  // Initialize passport for use
-  app.use(passport.initialize());
-
-
-  // Bring in defined Passport Strategy
-  require('../config/passport')(passport);
 
   // Create API group routes
   const apiRoutes = express.Router();
