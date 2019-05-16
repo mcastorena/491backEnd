@@ -19,9 +19,9 @@ const url = 'localhost:3000/api/';
 module.exports = function(app) {
   // API Route Section
 
-
   // Create API group routes
   const apiRoutes = express.Router();
+
 
   // GET status for authenticated camera
   apiRoutes.get('/camerastatus', function(req, res) {
@@ -32,7 +32,6 @@ module.exports = function(app) {
       res.status(202).json(messages);
     });
   });
-  //LOOK HERE FOR CHANGES
   apiRoutes.put(['/status/:id','/camerastatus/:id'], function(req,res,next){
     //console.log(req.params.id);
     //const camerastatus = new CameraStatus();
@@ -114,7 +113,6 @@ module.exports = function(app) {
       }
       );
   });
-
   apiRoutes.get('/camerastatus/:id',function(req,res,next){
     CameraStatus.findOne(
       {parkinglot_ID: req.params.id},
@@ -126,14 +124,11 @@ module.exports = function(app) {
       }
       );
   });
-  apiRoutes.get('/status', function (req, res) {
-    ParkingLotStatus.find({},
-      (err, lots)=>{
-        if (err) return res.status(500).send(err);
-        return res.send(lots);
-    });
+  apiRoutes.get('/status', function (req, res, next) {
+    ParkingLotStatus.find({}).then(function(lots){
+      res.send(lots);
+    }).catch(next);
   });
-
 
   // POST to create a new overlay image entry
   apiRoutes.post('/overlayimage', function (req, res) {
@@ -149,17 +144,14 @@ module.exports = function(app) {
           res.status(201).json({ message: 'Overlay Image saved!' });
       });
   });
-
-  // GET to return an overlay image
   apiRoutes.get('/overlayimage', function (req, res) {
-      OverlayImage.find({ $or: [{ 'parkinglot_ID': req.query.parkinglot_ID }, { 'parkinglot_ID': req.query.parkinglot_ID }] }, function (err, messages) {
-          if (err)
-              res.status(400).send(err);
+     OverlayImage.find({ $or: [{ 'parkinglot_ID': req.body.parkinglot_ID }, { 'parkinglot_ID': req.body.parkinglot_ID }] }, function (err, messages) {
+         if (err)
+             res.status(400).send(err);
 
-          res.status(202).json(messages);
-      });
+         res.status(400).json(messages);
+     });
   });
-
 
   // POST to create a new overlay coordinates entry
   apiRoutes.post('/overlaycoordinates', function (req, res) {
@@ -179,13 +171,12 @@ module.exports = function(app) {
   // GET to return overlay coordinates
   apiRoutes.get('/overlaycoordinates', function (req, res) {
       OverlayCoordinates.find({ $or: [{ 'parkinglot_ID': req.query.parkinglot_ID }, { 'parkinglot_ID': req.query.parkinglot_ID }] }, function (err, messages) {
-          if (err)
-              res.status(400).send(err);
+          // if (err)
+          //     res.status(400).send(err);
 
           res.status(202).json(messages);
-      });
+      }).catch(next);
   });
-
 
   // Set url for API group routes
   app.use('/api', apiRoutes);

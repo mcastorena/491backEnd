@@ -27,11 +27,12 @@ mongoose.connect(config.database);
 
 require('./app/routes')(app);
 
-//error handling(tomas)
+//error handling
 app.use(function(err, req,res, next){
   //console.log(err);
   res.status(422).send({error:err.message});
 });
+
 // Start the server
 app.listen(port);
 console.log('Your server is running on port ' + port + '.');
